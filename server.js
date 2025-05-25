@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const buyerRoutes=require('./routes/buyerRoutes');
+const sellerRoutes=require('./routes/sellerRoutes');
 
 const app = express();
 app.use(express.json());
@@ -32,6 +34,8 @@ sequelize.authenticate()
 //     res.send("helooo..is connection successfuly")
 // })
 app.use('/api/auth', authRoutes);
+app.use('/api/buyer',buyerRoutes);
+app.use('/api/seller',sellerRoutes);
 
 // sequelize.sync().then(() => {
 //   app.listen(process.env.PORT, () => {

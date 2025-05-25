@@ -3,21 +3,38 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const sendOTP = require('../utils/sendOTP');
 
+
+
 exports.register = async (req, res) => {
-  const { email, password, role, name,phone } = req.body;
-  console.log("email-------",email);
+  const { email, password, role, name, phone } = req.body;
+
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: 'User already exists' });
+
     const hashed = await bcrypt.hash(password, 10);
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 min
 
-    const user = await User.create({ email, password: hashed, role, name, otp,phone });
+    const user = await User.create({
+      email,
+      password: hashed,
+      role,
+      name,
+      phone,
+      otp,
+      // otpExpiry,
+      isVerified: false,
+    });
+
     await sendOTP(email, otp);
-
     res.json({ message: 'OTP sent to email for verification.' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error(err);
+    res.status(400).json({ error: 'Registration failed.' });
   }
 };
+
 
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
