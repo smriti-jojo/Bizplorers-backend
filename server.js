@@ -4,9 +4,11 @@ const sequelize = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const buyerRoutes=require('./routes/buyerRoutes');
 const sellerRoutes=require('./routes/sellerRoutes');
+const pickListRoutes=require('./routes/pickListRoutes');
 
 const app = express();
 app.use(express.json());
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -33,9 +35,11 @@ sequelize.authenticate()
 //     console.log("Hello server working fine");
 //     res.send("helooo..is connection successfuly")
 // })
+
 app.use('/api/auth', authRoutes);
 app.use('/api/buyer',buyerRoutes);
 app.use('/api/seller',sellerRoutes);
+app.use('/api/picklist',pickListRoutes);
 
 // sequelize.sync().then(() => {
 //   app.listen(process.env.PORT, () => {
