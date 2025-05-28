@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const buyerRoutes=require('./routes/buyerRoutes');
 const sellerRoutes=require('./routes/sellerRoutes');
 const pickListRoutes=require('./routes/pickListRoutes');
+const createAdminIfNotExists=require('./utils/createAdmin');
 
 const app = express();
 app.use(express.json());
@@ -12,13 +13,16 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+
+
 // Test database connection
 sequelize.authenticate()
   .then(() => {
     console.log("Database connected successfully");
 
     // Start the server only after DB is connected
-    sequelize.sync().then(() => {
+    sequelize.sync().then(async() => {
+       await createAdminIfNotExists();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
