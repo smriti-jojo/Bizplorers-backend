@@ -125,6 +125,7 @@ exports.verifyOtp = async (req, res) => {
     user.otp = null;
     await user.save();
 
+     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
     return res.json({ message: 'Email verified successfully' });
   } catch (err) {
     console.error('OTP Verification error:', err);
