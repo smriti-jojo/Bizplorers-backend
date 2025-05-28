@@ -6,11 +6,11 @@ const buyerRoutes=require('./routes/buyerRoutes');
 const sellerRoutes=require('./routes/sellerRoutes');
 const pickListRoutes=require('./routes/pickListRoutes');
 const createAdminIfNotExists=require('./utils/createAdmin');
-
+const cors = require('cors');
 const app = express();
 app.use(express.json());
 
-
+app.use(cors()); 
 const PORT = process.env.PORT || 3000;
 
 process.on('unhandledRejection', (reason, promise) => {
