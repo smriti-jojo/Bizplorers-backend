@@ -21,7 +21,7 @@ const sequelize = require('../config/db');
     month: { type: DataTypes.INTEGER, allowNull: false },
     cofounder_linkedin: { type: DataTypes.STRING, allowNull: false },
     businessCategory: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
-    businessLocation: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
+    // businessLocation: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
     entityStructure: { type: DataTypes.STRING, allowNull: false },
     country: { type: DataTypes.STRING, allowNull: false },
     state: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
