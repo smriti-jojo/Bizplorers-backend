@@ -126,7 +126,7 @@ exports.verifyOtp = async (req, res) => {
     await user.save();
 
      const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ message: 'Email verified successfully',token ,user:{email:email,role:user.role}});
+    return res.json({ message: 'Email verified successfully',token });
   } catch (err) {
     console.error('OTP Verification error:', err);
     return res.status(500).json({ error: 'Verification failed due to server error.' });
@@ -147,7 +147,7 @@ exports.login = async (req, res) => {
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ token });
+    return res.json({ token ,user:{email:email,role:user.role}});
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Login failed due to server error.' });
