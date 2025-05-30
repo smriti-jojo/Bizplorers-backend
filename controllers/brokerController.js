@@ -14,9 +14,9 @@ exports.fillBrokerDetails = async (req, res) => {
 
 exports.getBrokerDetails = async (req, res) => {
   try {
-    const Broker = await Broker.findOne({ where: { userId: req.user.id } });
-    if (!Broker) return res.status(404).json({ error: 'No Broker details found' });
-    res.status(200).json(Broker);
+    const broker = await Broker.findOne({ where: { userId: req.user.id } });
+    if (!broker) return res.status(404).json({ error: 'No Broker details found' });
+    res.status(200).json(broker);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
