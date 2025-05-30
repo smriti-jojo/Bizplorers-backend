@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const buyerRoutes=require('./routes/buyerRoutes');
 const sellerRoutes=require('./routes/sellerRoutes');
 const pickListRoutes=require('./routes/pickListRoutes');
+const brokerRoutes=require('./routes/brokerRoutes');
 const createAdminIfNotExists=require('./utils/createAdmin');
 const cors = require('cors');
 const app = express();
@@ -47,6 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/buyer',buyerRoutes);
 app.use('/api/seller',sellerRoutes);
 app.use('/api/picklist',pickListRoutes);
+app.use('/api/broker',brokerRoutes);
 
 // sequelize.sync().then(() => {
 //   app.listen(process.env.PORT, () => {

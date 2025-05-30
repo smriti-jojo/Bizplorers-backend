@@ -1,13 +1,43 @@
+// models/broker.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const User = require('./user');
 
-const BrokerRegistration = sequelize.define('BrokerRegistration', {
-  brokerId: { type: DataTypes.INTEGER, allowNull: false },
-  userId: { type: DataTypes.INTEGER, allowNull: false },
-});
+module.exports = (sequelize, DataTypes) => {
+  const Broker = sequelize.define('Broker', {
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+   
+    mobileNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    zipcode: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
+  });
 
-User.hasMany(BrokerRegistration, { foreignKey: 'brokerId' });
-BrokerRegistration.belongsTo(User, { foreignKey: 'brokerId' });
-
-module.exports = BrokerRegistration;
+  return Broker;
+};
