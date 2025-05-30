@@ -24,11 +24,11 @@ exports.getBrokerDetails = async (req, res) => {
 
 exports.updateBrokerDetails = async (req, res) => {
   try {
-    const Broker = await Broker.findOne({ where: { userId: req.user.id } });
-    if (!Broker) return res.status(404).json({ error: 'No buyer details found' });
+    const broker = await Broker.findOne({ where: { userId: req.user.id } });
+    if (!broker) return res.status(404).json({ error: 'No buyer details found' });
 
-    await Broker.update(req.body);
-    res.status(200).json(Broker);
+    await broker.update(req.body);
+    res.status(200).json(broker);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
