@@ -12,9 +12,12 @@ exports.createSeller = async (req, res) => {
    const payload = { ...req.body, userId: req.user.id };
 
     // Optional: allow broker to create seller on behalf of someone else
-    if (req.user.role === 'broker' && req.body.brokerId) {
-      payload.brokerId = req.body.brokerId;
-    }
+    // if (req.user.role === 'broker' && req.body.brokerId) {
+    //   payload.brokerId = req.body.brokerId;
+    // }
+        if (req.user.role === 'broker') {
+  payload.brokerId = req.user.id;
+}
     const seller = await Seller.create(payload);
     res.status(201).json(seller);
   } catch (err) {

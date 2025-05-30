@@ -10,9 +10,13 @@ exports.fillBuyerDetails = async (req, res) => {
     // Start building the payload
     const payload = { ...req.body, userId: req.user.id };
 
-      if (req.user.role === 'broker' && req.body.brokerId) {
-      payload.brokerId = req.body.brokerId;
-    }
+    //   if (req.user.role === 'broker' && req.body.brokerId) {
+    //   payload.brokerId = req.body.brokerId;
+    // }
+    if (req.user.role === 'broker') {
+  payload.brokerId = req.user.id;
+}
+
     const buyer = await Buyer.create(payload);
     res.status(201).json(buyer);
   } catch (error) {
