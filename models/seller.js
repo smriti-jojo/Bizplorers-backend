@@ -57,7 +57,12 @@ const sequelize = require('../config/db');
   validate: {
     isIn: [['active', 'dormant']]
   }
+},
+brokerId: {
+  type: DataTypes.INTEGER,
+  allowNull: true
 }
+
   });
 
   

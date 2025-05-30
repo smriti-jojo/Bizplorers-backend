@@ -124,6 +124,11 @@ status: {
     isIn: [['active', 'dormant']]
   }
 }
+,
+brokerId: {
+  type: DataTypes.INTEGER,
+  allowNull: true // Only added if created by broker
+}
 
 
 });
