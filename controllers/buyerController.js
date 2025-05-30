@@ -7,7 +7,13 @@ exports.fillBuyerDetails = async (req, res) => {
     const exists = await Buyer.findOne({ where: { userId: req.user.id } });
     if (exists) return res.status(400).json({ error: 'Buyer details already filled' });
 
-    const buyer = await Buyer.create({ ...req.body, userId: req.user.id });
+    // Start building the payload
+    const payload = { ...req.body, userId: req.user.id };
+
+      if (req.user.role === 'broker' && req.body.brokerId) {
+      payload.brokerId = req.body.brokerId;
+    }
+    const buyer = await Buyer.create(payload);
     res.status(201).json(buyer);
   } catch (error) {
     res.status(400).json({ error: error.message });
