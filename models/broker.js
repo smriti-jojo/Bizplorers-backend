@@ -2,8 +2,13 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-module.exports = (sequelize, DataTypes) => {
+
   const Broker = sequelize.define('Broker', {
+      userId: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+  unique: true,
+},
     firstName: {
       type: DataTypes.STRING,
       allowNull: false
@@ -15,29 +20,36 @@ module.exports = (sequelize, DataTypes) => {
    
     mobileNumber: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     country: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     state: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull:false
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     zipcode: {
       type: DataTypes.STRING,
-      allowNull: true
-    }
+      allowNull: false
+    },
+    status: {
+  type: DataTypes.STRING,
+  allowNull: false,
+  defaultValue: 'active',
+  validate: {
+    isIn: [['active', 'dormant']]
+  }
+}
   });
-
-  return Broker;
-};
+  
+module.exports = Broker
