@@ -25,7 +25,7 @@ sequelize.authenticate()
     console.log("Database connected successfully");
 
     // Start the server only after DB is connected
-    sequelize.sync().then(async() => {
+    sequelize.sync({ alter: true }).then(async() => {
        await createAdminIfNotExists();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
