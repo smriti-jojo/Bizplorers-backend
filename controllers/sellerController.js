@@ -109,6 +109,9 @@ exports.getSellersByBrokerId = async (req, res) => {
       }
     });
 
+     if (sellers.length === 0) {
+      return res.status(404).json({ message: 'No sellers found for this broker.' });
+    }
     return res.status(200).json(sellers);
   } catch (error) {
     console.error('Error fetching buyers:', error);

@@ -9,9 +9,22 @@ const brokerRoutes=require('./routes/brokerRoutes');
 const createAdminIfNotExists=require('./utils/createAdmin');
 const cors = require('cors');
 const app = express();
+
+app.use(cors({
+  origin: '*', // or 'https://your-frontend-domain.com' for stricter control
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// ✅ Handle preflight (OPTIONS) for all routes
+app.options('*', cors());
+
 app.use(express.json());
 
-app.use(cors()); 
+// app.use(cors()); 
+// app.use(express.json());
+// app.options('*', cors());
+
 const PORT = process.env.PORT || 3000;
 
 process.on('unhandledRejection', (reason, promise) => {
