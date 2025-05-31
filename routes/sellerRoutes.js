@@ -12,4 +12,6 @@ router.get("/get_detail", auth, sellerController.getSeller);
 // PUT /seller - Update seller profile
 router.put("/update_detail", auth, sellerController.updateSeller);
 
+router.get("/getAllSeller/:brokerId", auth, sellerController.getSellersByBrokerId);
+
 module.exports = router;

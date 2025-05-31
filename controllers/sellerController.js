@@ -98,3 +98,21 @@ exports.updateSeller = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.getSellersByBrokerId = async (req, res) => {
+  const { brokerId } = req.params;
+
+  try {
+    const sellers = await Seller.findAll({
+      where: {
+        brokerId: brokerId
+      }
+    });
+
+    return res.status(200).json(sellers);
+  } catch (error) {
+    console.error('Error fetching buyers:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
