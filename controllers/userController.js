@@ -9,3 +9,61 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    await user.update(updates);
+    res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    await user.destroy(); // Soft delete
+    res.status(200).json({ message: 'User soft-deleted successfully' });
+  } catch (error) {
+    console.error('Error soft deleting user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.listDeletedUsers = async (req, res) => {
+  try {
+    const deletedUsers = await User.findAll({ where: {}, paranoid: false });
+    const softDeleted = deletedUsers.filter(user => user.deletedAt !== null);
+    res.status(200).json(softDeleted);
+  } catch (error) {
+    console.error('Error fetching soft-deleted users:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// POST /api/users/restore/:id - Optional: Restore soft-deleted user
+exports.restoreUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, { paranoid: false });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    await user.restore();
+    res.status(200).json({ message: 'User restored successfully' });
+  } catch (error) {
+    console.error('Error restoring user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
