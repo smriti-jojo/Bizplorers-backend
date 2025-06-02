@@ -141,3 +141,53 @@ exports.getCategories = async (req, res) => {
   const categories = await PicklistCategory.findAll({ order: [['name', 'ASC']] });
   res.json(categories);
 };
+
+// get all value in admin screen
+exports.getAllPicklists = async (req, res) => {
+  try {
+    const picklistValues = await PicklistValue.findAll({
+      include: {
+        model: PicklistCategory,
+        attributes: ['name'],
+      },
+      order: [['category_id', 'ASC']],
+    });
+
+    const grouped = {};
+    picklistValues.forEach((item) => {
+      const categoryName = item.PicklistCategory.name;
+      if (!grouped[categoryName]) grouped[categoryName] = [];
+
+      grouped[categoryName].push({
+        id: item.id,
+        name: item.value,
+        active: item.is_active,
+      });
+    });
+
+    res.status(200).json({ data: grouped });
+  } catch (error) {
+    console.error("Error fetching picklists:", error);
+    res.status(500).json({ message: 'Server error while fetching picklists.' });
+  }
+};
+
+//toggle
+exports.togglePicklistValue = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const picklistValue = await PicklistValue.findByPk(id);
+    if (!picklistValue) return res.status(404).json({ message: 'Value not found.' });
+
+    picklistValue.is_active = !picklistValue.is_active;
+    await picklistValue.save();
+
+    res.status(200).json({
+      message: `Value ${picklistValue.is_active ? 'activated' : 'deactivated'} successfully.`,
+      data: picklistValue
+    });
+  } catch (err) {
+    console.error("Error toggling value:", err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
