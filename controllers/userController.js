@@ -67,3 +67,21 @@ exports.restoreUser = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.updateComment=async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comment } = req.body;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.comment = comment;
+    await user.save();
+
+    res.json({ message: 'Comment updated', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
