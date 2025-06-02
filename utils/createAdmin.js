@@ -6,9 +6,9 @@ async function createAdminIfNotExists() {
   const existingAdmin = await User.findOne({ where: { email: 'admin@example.com' } });
 
   if (!existingAdmin) {
-    const hashed = await bcrypt.hash('YourStrongAdminPassword', 10);
+    const hashed = await bcrypt.hash('admin123', 10);
     await User.create({
-      email: 'admin@example.com',
+      email: 'admin@gmail.com',
       password: hashed,
       role: 'admin',
       isVerified: true,
