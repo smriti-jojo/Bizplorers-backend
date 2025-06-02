@@ -49,6 +49,71 @@ exports.getValuesByCategory = async (req, res) => {
   return res.json(values);
 };
 
+// Assuming PicklistCategory and PicklistValue models are already imported
+
+exports.addMultiplePicklistValues = async (req, res) => {
+  try {
+    const { picklists } = req.body;
+
+    if (!picklists || typeof picklists !== 'object' || Object.keys(picklists).length === 0) {
+      return res.status(400).json({ message: 'Picklists data required.' });
+    }
+
+    const results = {};
+
+    // Loop over each category (key) in picklists object
+    for (const [categoryName, values] of Object.entries(picklists)) {
+      if (!Array.isArray(values) || values.length === 0) {
+        // Skip empty or invalid arrays
+        continue;
+      }
+
+      // Find or create the category
+      let category = await PicklistCategory.findOne({ where: { name: categoryName } });
+      if (!category) {
+        category = await PicklistCategory.create({ name: categoryName });
+      }
+
+      results[categoryName] = [];
+
+      // Loop over unique values only
+      const uniqueValues = [...new Set(values)];
+
+      for (const value of uniqueValues) {
+        // Use findOrCreate to avoid duplicates
+        const [picklistValue, created] = await PicklistValue.findOrCreate({
+          where: {
+            category_id: category.id,
+            value,
+          },
+          defaults: {
+            is_active: true,
+          },
+        });
+
+        // If already existed but inactive, reactivate it
+        if (!created && !picklistValue.is_active) {
+          picklistValue.is_active = true;
+          await picklistValue.save();
+        }
+
+        results[categoryName].push({
+          id: picklistValue.id,
+          value: picklistValue.value,
+          is_active: picklistValue.is_active,
+          created: created,
+        });
+      }
+    }
+
+    res.status(200).json({ message: 'Picklist values added/updated.', data: results });
+  } catch (error) {
+    console.error('Error in addMultiplePicklistValues:', error);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+
 // 🛑 Deactivate value
 exports.deactivateValue = async (req, res) => {
   const { id } = req.body;
