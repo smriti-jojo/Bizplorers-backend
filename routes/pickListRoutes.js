@@ -9,7 +9,7 @@ router.patch('/deactivate',auth, controller.deactivateValue);
 router.put('/update_value',auth, controller.updateValue);
 router.get('/categories', auth, controller.getCategories);
 router.post('/multiple_add_value',auth,controller.addMultiplePicklistValues);
-router.patch('/toggle/:id', picklistController.togglePicklistValue);
-router.get('/get_all',picklistController.getAllPicklists);
+router.patch('/toggle/:id', auth,controller.togglePicklistValue);
+router.get('/get_all',auth,controller.getAllPicklists);
 
 module.exports = router;
