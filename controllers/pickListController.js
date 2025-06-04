@@ -127,7 +127,7 @@ exports.deactivateValue = async (req, res) => {
 
 //Hard Delete
 exports.hardDeleteValue = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   const value = await PicklistValue.findByPk(id);
   if (!value) return res.status(404).json({ message: 'Value not found' });
 
