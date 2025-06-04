@@ -42,7 +42,7 @@ exports.getValuesByCategory = async (req, res) => {
   if (!categoryObj) return res.status(404).json({ message: 'Category not found' });
 
   const values = await PicklistValue.findAll({
-    where: { category_id: categoryObj.id },
+    where: { category_id: categoryObj.id ,is_active: true},
     order: [['value', 'ASC']]
   });
 
@@ -114,7 +114,7 @@ exports.addMultiplePicklistValues = async (req, res) => {
 };
 
 
-// 🛑 Deactivate value
+// Soft Delete
 exports.deactivateValue = async (req, res) => {
   const { id } = req.body;
   const value = await PicklistValue.findByPk(id);
@@ -124,6 +124,17 @@ exports.deactivateValue = async (req, res) => {
   await value.save();
   res.json({ message: 'Value deactivated.' });
 };
+
+//Hard Delete
+exports.hardDeleteValue = async (req, res) => {
+  const { id } = req.body;
+  const value = await PicklistValue.findByPk(id);
+  if (!value) return res.status(404).json({ message: 'Value not found' });
+
+  await value.destroy();
+  res.json({ message: 'Value permanently deleted.' });
+};
+
 
 // ✏️ Update value
 exports.updateValue = async (req, res) => {
