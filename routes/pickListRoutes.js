@@ -11,6 +11,6 @@ router.get('/categories', auth, controller.getCategories);
 router.post('/multiple_add_value',auth,controller.addMultiplePicklistValues);
 router.patch('/toggle/:id', auth,controller.togglePicklistValue);
 router.get('/get_all',auth,controller.getAllPicklists);
-router.get('/delete',auth,controller.hardDeleteValue);
+router.delete('/delete/:id',auth,controller.hardDeleteValue);
 
 module.exports = router;
