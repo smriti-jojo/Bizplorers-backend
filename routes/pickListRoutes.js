@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/pickListController');
-const auth =require('../middleware/authMiddleware');
+const auth =require('../middleware/adminMiddleware');
 
 router.post('/add_value',auth, controller.addValue);
 router.get('/get_value',auth, controller.getValuesByCategory);
