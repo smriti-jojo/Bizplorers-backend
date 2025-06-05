@@ -13,5 +13,6 @@ router.get("/get_detail", auth, sellerController.getSeller);
 router.put("/update_detail", auth, sellerController.updateSeller);
 
 router.get("/getAllSeller/:brokerId", auth, sellerController.getSellersByBrokerId);
+router.get("/getAllSeller",sellerController.getAllSellers);
 
 module.exports = router;

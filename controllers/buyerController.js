@@ -108,3 +108,16 @@ exports.getBuyersByBrokerId = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// GET: Fetch all buyer profiles (admin/general access)
+exports.getAllBuyers = async (req, res) => {
+  try {
+    const buyers = await Buyer.findAll();
+    if (!buyers || buyers.length === 0) {
+      return res.status(404).json({ message: "No buyers found." });
+    }
+    res.status(200).json(buyers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -119,3 +119,17 @@ exports.getSellersByBrokerId = async (req, res) => {
   }
 };
 
+// GET: Fetch all seller profiles (admin or general view)
+exports.getAllSellers = async (req, res) => {
+  try {
+    const sellers = await Seller.findAll();
+    if (!sellers || sellers.length === 0) {
+      return res.status(404).json({ message: "No sellers found." });
+    }
+    res.status(200).json(sellers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
