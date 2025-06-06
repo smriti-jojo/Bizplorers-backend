@@ -1,4 +1,6 @@
 const Broker=require('../models/broker');
+const Seller=require('../models/seller');
+const Buyer=require('../models/buyer');
 
 // exports.fillBrokerDetails = async (req, res) => {
 //   try {
