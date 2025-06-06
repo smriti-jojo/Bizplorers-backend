@@ -69,11 +69,11 @@ const Buyer = sequelize.define('Buyer', {
   },
   openToPreBreakeven: {
     type: DataTypes.BOOLEAN,
-    allowNull: false
+    allowNull: true
   },
   revenueSizeMin: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     validate: {
       min: 0,
       isInt: true
@@ -81,7 +81,7 @@ const Buyer = sequelize.define('Buyer', {
   },
   revenueSizeMax: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     validate: {
       min: 0,
       isInt: true
