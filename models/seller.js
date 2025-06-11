@@ -19,7 +19,7 @@ const sequelize = require('../config/db');
     numLocation: { type: DataTypes.INTEGER, allowNull: false },
     year: { type: DataTypes.INTEGER, allowNull: false },
     month: { type: DataTypes.INTEGER, allowNull: false },
-    cofounderLinks: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
+    cofounderLinks: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false , defaultValue: []  } , //Empty array for existing and new rows
     //  preferredArrangement: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
     businessCategory: { type: DataTypes.STRING, allowNull: false },
     // businessLocation: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
