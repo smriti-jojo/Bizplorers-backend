@@ -111,28 +111,70 @@ exports.register = async (req, res) => {
   }
 };
 
+// exports.verifyOtp = async (req, res) => {
+//   const { email, otp } = req.body;
+
+//   try {
+//     const user = await User.findOne({ where: { email } });
+
+//     if (!user || user.otp !== otp) {
+//       return res.status(400).json({ error: 'Invalid OTP' });
+//     }
+
+//     user.isVerified = true;
+//     user.otp = null;
+//     await user.save();
+
+//      const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+//     return res.json({ message: 'Email verified successfully',token,user:{email:email,role:user.role,id:user.id} });
+//   } catch (err) {
+//     console.error('OTP Verification error:', err);
+//     return res.status(500).json({ error: 'Verification failed due to server error.' });
+//   }
+// };
+
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
     const user = await User.findOne({ where: { email } });
 
-    if (!user || user.otp !== otp) {
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const allowBypass = process.env.ALLOW_OTP_BYPASS === 'true';
+
+    if (!allowBypass && user.otp !== otp) {
       return res.status(400).json({ error: 'Invalid OTP' });
     }
 
+    // Update verification status and clear OTP
     user.isVerified = true;
     user.otp = null;
     await user.save();
 
-     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ message: 'Email verified successfully',token,user:{email:email,role:user.role,id:user.id} });
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.json({
+      message: allowBypass ? 'OTP bypassed for testing' : 'Email verified successfully',
+      token,
+      user: {
+        email: user.email,
+        role: user.role,
+        id: user.id
+      }
+    });
   } catch (err) {
     console.error('OTP Verification error:', err);
     return res.status(500).json({ error: 'Verification failed due to server error.' });
   }
 };
-
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
