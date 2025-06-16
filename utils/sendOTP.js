@@ -30,7 +30,7 @@ console.log("user",process.env.EMAIL_USER);
 console.log("pass",process.env.EMAIL_PASS);
   try {
     await transporter.sendMail({
-      from: `"System" <${process.env.EMAIL_USER}>`,
+      from: `"Bizplorers" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Your OTP Code",
       text: `Use this OTP to verify your email: ${otp}`
