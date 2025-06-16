@@ -224,7 +224,7 @@ exports.login = async (req, res) => {
 
     return res.status(200).json({
       token,
-      user:{email:email,role:user.role,id:user.id,dataFilled: roleData?.dataFilled || false}
+      user:{email:email,role:user.role,id:user.id,name:user.name,dataFilled: roleData?.dataFilled || false}
 
     });
 
