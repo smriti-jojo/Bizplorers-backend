@@ -64,6 +64,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const sendOTP = require('../utils/sendOTP');
+const Broker=require('../models/broker');
+const Seller=require('../models/seller');
+const Buyer=require('../models/buyer');
 
 exports.register = async (req, res) => {
   const { email, password, role, name, phone } = req.body;
