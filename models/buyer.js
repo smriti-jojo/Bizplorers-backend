@@ -128,8 +128,12 @@ status: {
 brokerId: {
   type: DataTypes.INTEGER,
   allowNull: true // Only added if created by broker
-}
-
+},
+dataFilled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // ✅ set default to false
+    allowNull: false,
+  }
 
 });
 // Buyer.belongsTo(User, { foreignKey: 'userId' });

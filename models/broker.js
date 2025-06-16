@@ -49,7 +49,12 @@ const sequelize = require('../config/db');
   validate: {
     isIn: [['active', 'dormant']]
   }
-}
+},
+dataFilled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // ✅ set default to false
+    allowNull: false,
+  }
   });
   
 module.exports = Broker

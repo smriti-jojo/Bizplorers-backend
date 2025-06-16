@@ -62,7 +62,12 @@ const sequelize = require('../config/db');
 brokerId: {
   type: DataTypes.INTEGER,
   allowNull: true
-}
+},
+dataFilled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // ✅ set default to false
+    allowNull: false,
+  }
 
   });
 
