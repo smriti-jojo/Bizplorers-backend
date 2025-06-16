@@ -24,7 +24,7 @@ const Buyer = sequelize.define('Buyer', {
   },
   linkedinProfile: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     validate: {
       isUrl: true,
       notEmpty: true
