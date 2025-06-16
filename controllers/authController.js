@@ -175,6 +175,26 @@ exports.verifyOtp = async (req, res) => {
     return res.status(500).json({ error: 'Verification failed due to server error.' });
   }
 };
+// exports.login = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await User.findOne({ where: { email } });
+
+//     if (!user || !user.isVerified) {
+//       return res.status(403).json({ error: 'User not verified or does not exist' });
+//     }
+
+//     const valid = await bcrypt.compare(password, user.password);
+//     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+
+//     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+//     return res.json({ token ,user:{email:email,role:user.role,id:user.id}});
+//   } catch (err) {
+//     console.error('Login error:', err);
+//     return res.status(500).json({ error: 'Login failed due to server error.' });
+//   }
+// };
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -188,10 +208,25 @@ exports.login = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ token ,user:{email:email,role:user.role,id:user.id}});
-  } catch (err) {
-    console.error('Login error:', err);
-    return res.status(500).json({ error: 'Login failed due to server error.' });
+    let roleData;
+    if (user.role === "buyer") {
+      roleData = await Buyer.findOne({ where: { userId: user.id } });
+    } else if (user.role === "seller") {
+      roleData = await Seller.findOne({ where: { userId: user.id } });
+    } else if (user.role === "broker") {
+      roleData = await Broker.findOne({ where: { userId: user.id } });
+    }
+
+     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    return res.status(200).json({
+      token,
+      user:{email:email,role:user.role,id:user.id,dataFilled: roleData?.dataFilled || false}
+
+    });
+
+  } catch (error) {
+    console.error("Login error:", error); // helpful for debugging
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
