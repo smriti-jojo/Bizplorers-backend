@@ -9,19 +9,19 @@ const sequelize = require('../config/db');
   allowNull: false,
   unique: true,
 },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+    // firstName: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false
+    // },
+    // lastName: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false
+    // },
    
-    mobileNumber: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+    // mobileNumber: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false
+    // },
     address: {
       type: DataTypes.STRING,
       allowNull: false
