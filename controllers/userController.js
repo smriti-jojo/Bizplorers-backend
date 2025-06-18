@@ -85,3 +85,23 @@ exports.updateComment=async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.getUsersByRole = async (req, res) => {
+  try {
+    const { role } = req.query;
+
+    if (!role) {
+      return res.status(400).json({ error: 'Role is required' });
+    }
+
+    const users = await User.findAll({
+      where: { role },
+      attributes: ['id', 'name', 'role'] // adjust attributes as needed
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users by role:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

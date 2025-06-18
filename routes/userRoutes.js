@@ -15,6 +15,7 @@ router.delete('/:id',auth, userController.deleteUser); // soft delete user
 router.get('/deleted/all', auth, userController.listDeletedUsers); // list soft-deleted users
 router.post('/restore/:id', auth, userController.restoreUser); // restore soft-deleted user
 router.patch('/comment/:id', auth, userController.updateComment);
+router.get('/role-based-users',userController.getUsersByRole);
 
 
 // PUT /seller - Update seller profile
