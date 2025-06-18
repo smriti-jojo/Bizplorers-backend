@@ -57,3 +57,48 @@ exports.updateBrokerDetails = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.assignMultipleUsersToBroker = async (req, res) => {
+  try {
+    const { brokerId, users } = req.body;
+
+    if (!brokerId || !Array.isArray(users) || users.length === 0) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+
+    const results = [];
+
+    for (const { userId, role } of users) {
+      if (!userId || !role) continue;
+
+      if (role === "seller") {
+        const seller = await Seller.findOne({ where: { userId } });
+        if (seller) {
+          await seller.update({ brokerId });
+          results.push({ userId, role, status: "updated" });
+        } else {
+          results.push({ userId, role, status: "not found" });
+        }
+      } else if (role === "buyer") {
+        const buyer = await Buyer.findOne({ where: { userId } });
+        if (buyer) {
+          await buyer.update({ brokerId });
+          results.push({ userId, role, status: "updated" });
+        } else {
+          results.push({ userId, role, status: "not found" });
+        }
+      } else {
+        results.push({ userId, role, status: "invalid role" });
+      }
+    }
+
+    return res.status(200).json({
+      message: "Users processed",
+      results,
+    });
+  } catch (error) {
+    console.error("Error assigning users to broker:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
