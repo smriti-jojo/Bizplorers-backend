@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const {User}=require('../models')
 
 async function createAdminIfNotExists() {
-  const existingAdmin = await User.findOne({ where: { email: 'admin@example.com' } });
+  const existingAdmin = await User.findOne({ where: { email: 'admin@gmail.com' } });
 
   if (!existingAdmin) {
     const hashed = await bcrypt.hash('admin123', 10);
