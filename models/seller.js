@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
     lastFinancialYear: { type: DataTypes.STRING, allowNull: false },
     // prevFinancialYear: { type: DataTypes.STRING, allowNull: false },
     // prePrevFinancialYear: { type: DataTypes.STRING, allowNull: false },
-    trail12months: { type: DataTypes.STRING, allowNull: false },
+    trailing12months: { type: DataTypes.STRING, allowNull: false },
     // lastmonth: { type: DataTypes.STRING, allowNull: false },
     prevMonth: { type: DataTypes.STRING, allowNull: false },
     // prePrevMonth: { type: DataTypes.STRING, allowNull: false },
