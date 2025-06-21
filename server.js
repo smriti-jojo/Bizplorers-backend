@@ -46,7 +46,7 @@ const startServer = async () => {
 //  await db.sequelize.sync({ force: false }); //for prod
     //  await db.sequelize.sync({ alter: true }); // Use force: true only in dev with caution
     // await db.sequelize.sync({ force: true });
-    await db.sequelize.sync(); // or db.sequelize.sync({ alter: true }) if you're still evolving schema
+    await db.sequelize.sync({ alter: true }); // or db.sequelize.sync({ alter: true }) if you're still evolving schema
 
 
     console.log("✅ All models synced successfully");
