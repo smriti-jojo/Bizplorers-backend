@@ -1,21 +1,31 @@
-// models/index.js
+const fs = require('fs');
+const path = require('path');
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
 
-const User = require('./user');
-const Buyer = require('./buyer');
-const Seller=require('./seller');
-const Broker=require('./broker');
+const db = {};
 
-// Define associations
-User.hasOne(Buyer, { foreignKey: 'userId' });
-Buyer.belongsTo(User, { foreignKey: 'userId' });
+// 1. Load all models
+fs.readdirSync(__dirname)
+  .filter(file => file !== 'index.js' && file.endsWith('.js'))
+  .forEach(file => {
+    const modelDef = require(path.join(__dirname, file));
+    const model = modelDef(sequelize, Sequelize.DataTypes); // ✅ FIXED
+     console.log("Loaded model:", model.name);  
+    db[model.name] = model;
+  });
 
-module.exports = {
-  sequelize,
-  Sequelize,
-  User,
-  Buyer,
-  Seller,
-  Broker
-};
+// 2. Apply associations
+Object.keys(db).forEach(modelName => {
+  
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+
+// 3. Export
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;

@@ -1,73 +1,69 @@
-const  Seller = require("../models/seller");
-const Buyer=require('../models/buyer');
-const  Broker=require('../models/broker');
+// const  Seller = require("../models");.
+const { User, Seller,Buyer,Broker } = require('../models');
+console.log("Seller",Seller);
+// const Buyer=require('../models/buyer');
+// const  Broker=require('../models/broker');
 
 //POST: Create seller profile
-exports.createSeller = async (req, res) => {
-  try {
-    const existing = await Seller.findOne({ where: { userId: req.user.id } });
-    if (existing) {
-      return res.status(400).json({ message: "Seller profile already exists." });
-    }
-   const payload = { ...req.body, userId: req.user.id };
-
-    // Optional: allow broker to create seller on behalf of someone else
-    // if (req.user.role === 'broker' && req.body.brokerId) {
-    //   payload.brokerId = req.body.brokerId;
-    // }
-        if (req.user.role === 'broker') {
-  payload.brokerId = req.user.id;
-}
-    const seller = await Seller.create(payload);
-    res.status(201).json(seller);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
 // exports.createSeller = async (req, res) => {
 //   try {
 //     const existing = await Seller.findOne({ where: { userId: req.user.id } });
 //     if (existing) {
 //       return res.status(400).json({ message: "Seller profile already exists." });
 //     }
+//    const payload = { ...req.body, userId: req.user.id };
 
-//     let payload = { ...req.body, userId: req.user.id };
-
-//     if (req.user.role === 'broker' && req.body.brokerId) {
-//       payload.brokerId = req.body.brokerId;
-//     }
-
+//     // Optional: allow broker to create seller on behalf of someone else
+//     // if (req.user.role === 'broker' && req.body.brokerId) {
+//     //   payload.brokerId = req.body.brokerId;
+//     // }
+//         if (req.user.role === 'broker') {
+//   payload.brokerId = req.user.id;
+// }
 //     const seller = await Seller.create(payload);
 //     res.status(201).json(seller);
 //   } catch (err) {
 //     res.status(400).json({ message: err.message });
 //   }
 // };
+exports.createSeller = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-// exports.createSeller = async (req, res) => {
-//   try {
-//     const existingSeller = await Seller.findOne({ where: { userId: req.user.id } });
-//     const existingBuyer = await Buyer.findOne({ where: { userId: req.user.id } });
-//     const existingBroker = await Broker.findOne({ where: { userId: req.user.id } });
+    // Check if user exists (optional but safe)
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist." });
+    }
 
-//     if (existingSeller || existingBuyer || existingBroker) {
-//       return res.status(400).json({ message: "You already have a profile as Buyer, Seller, or Broker." });
-//     }
+    // Check if Seller profile already exists for this user
+    const existingSeller = await Seller.findOne({ where: { userId } });
+    if (existingSeller) {
+      return res.status(400).json({ message: "Seller profile already exists." });
+    }
 
-//     let payload = { ...req.body, userId: req.user.id };
+    // Prepare data to insert
+    const payload = {
+      ...req.body,
+      userId,
+    };
 
-    
-//     if (req.user.role === 'broker' && req.body.brokerId) {
-//       payload.brokerId = req.body.brokerId;
-//     }
+    // If broker is creating their own profile or acting as seller
+    if (req.user.role === 'broker') {
+      payload.brokerId = userId;
+    }
 
-//     const seller = await Seller.create(payload);
-//     res.status(201).json(seller);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// };
+    // Save seller profile
+    const newSeller = await Seller.create(payload);
+    return res.status(201).json(newSeller);
+
+  } catch (err) {
+    console.error("Error in createSeller:", err);
+    return res.status(500).json({ message: err.message || "Something went wrong." });
+  }
+};
+
+
 
 
 // GET: Fetch own seller profile
@@ -106,8 +102,14 @@ exports.getSellersByBrokerId = async (req, res) => {
     const sellers = await Seller.findAll({
       where: {
         brokerId: brokerId
-      }
+      },
+      include: [{ model: User 
+        
+
+      }],
+     
     });
+    
 
      if (sellers.length === 0) {
       return res.status(404).json({ message: 'No sellers found for this broker.' });

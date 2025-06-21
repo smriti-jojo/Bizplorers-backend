@@ -1,21 +1,28 @@
-const Buyer = require('../models/buyer');
-const Seller=require('../models/seller');
-const Broker=require('../models/broker');
+// const Buyer = require('../models/buyer');
+// const Seller=require('../models/seller');
+// const Broker=require('../models/broker');
+
+// const { Buyer, User,Seller,Broker } = require('../models');
+const { User, Seller,Buyer,Broker } = require('../models');
+
+// controllers/buyerController.js
+// const { Buyer, User } = require('../models');
 
 exports.fillBuyerDetails = async (req, res) => {
   try {
-    const exists = await Buyer.findOne({ where: { userId: req.user.id } });
-    if (exists) return res.status(400).json({ error: 'Buyer details already filled' });
+    // Confirm user exists first
+    const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Start building the payload
+    // Check if buyer profile already exists
+    const exists = await Buyer.findOne({ where: { userId: req.user.id } });
+    if (exists) return res.status(400).json({ error: 'Buyer profile already filled' });
+
     const payload = { ...req.body, userId: req.user.id };
 
-    //   if (req.user.role === 'broker' && req.body.brokerId) {
-    //   payload.brokerId = req.body.brokerId;
-    // }
     if (req.user.role === 'broker') {
-  payload.brokerId = req.user.id;
-}
+      payload.brokerId = req.user.id;
+    }
 
     const buyer = await Buyer.create(payload);
     res.status(201).json(buyer);
@@ -23,6 +30,8 @@ exports.fillBuyerDetails = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
 
 // exports.fillBuyerDetails = async (req, res) => {
 //   try {
