@@ -276,7 +276,11 @@ exports.sendResetOtp = async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     await user.update({ otp });
 
-    await sendOTP(email, otp); // Your existing util
+    await sendOTP(email, otp, `Use this OTP to reset your Bizplorers password: ${otp}`);
+
+    // await sendOTP(email, otp); // Your existing util
+    // await sendOTP(email, otp, `Use this OTP to reset your Bizplorers password: ${otp}`);
+
 
     return res.json({ message: 'OTP sent to email for password reset' });
   } catch (err) {

@@ -16,28 +16,54 @@
 //     text: `Use this OTP to verify your email: ${otp}`
 //   });
 // };
+// const nodemailer = require('nodemailer');
+
+// module.exports = async function sendOTP(email, otp) {
+//   const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: process.env.EMAIL_USER,
+//       pass: process.env.EMAIL_PASS
+//     }
+//   });
+// console.log("user",process.env.EMAIL_USER);
+// console.log("pass",process.env.EMAIL_PASS);
+//   try {
+//     await transporter.sendMail({
+//       from: `"Bizplorers" <${process.env.EMAIL_USER}>`,
+//       to: email,
+//       subject: "Your OTP Code",
+//       text: `Use this OTP to verify your email: ${otp}`
+//     });
+//     console.log(`OTP sent to ${email}`);
+//   } catch (err) {
+//     console.error('Error sending OTP email:', err);
+//     throw err;  // propagate error so caller knows
+//   }
+// };
 const nodemailer = require('nodemailer');
 
-module.exports = async function sendOTP(email, otp) {
+module.exports = async function sendOTP(email, otp, customMessage) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
+      pass: process.env.EMAIL_PASS,
+    },
   });
-console.log("user",process.env.EMAIL_USER);
-console.log("pass",process.env.EMAIL_PASS);
+
+  const text = customMessage || `Use this OTP to verify your email: ${otp}`;
+
   try {
     await transporter.sendMail({
       from: `"Bizplorers" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Your OTP Code",
-      text: `Use this OTP to verify your email: ${otp}`
+      text: text,
     });
     console.log(`OTP sent to ${email}`);
   } catch (err) {
     console.error('Error sending OTP email:', err);
-    throw err;  // propagate error so caller knows
+    throw err;
   }
 };
