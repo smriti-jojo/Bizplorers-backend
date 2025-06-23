@@ -304,13 +304,19 @@ module.exports = (sequelize, DataTypes) => {
       validate: { notEmpty: true },
     },
     linkedinProfile: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      validate: {
-        isUrl: true,
-        notEmpty: true,
-      },
+  type: DataTypes.STRING,
+  allowNull: true, // optional field
+  validate: {
+    isValidUrlOrEmpty(value) {
+      if (value && value.trim() !== '') {
+        const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/i;
+        if (!urlPattern.test(value)) {
+          throw new Error('Invalid LinkedIn URL');
+        }
+      }
     },
+  },
+},
     businessCategories: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
