@@ -350,22 +350,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
-    revenueSizeMin: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        min: 0,
-        isInt: true,
-      },
-    },
-    revenueSizeMax: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        min: 0,
-        isInt: true,
-      },
-    },
+    // revenueSizeMin: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   validate: {
+    //     min: 0,
+    //     isInt: true,
+    //   },
+    // },
+    // revenueSizeMax: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   validate: {
+    //     min: 0,
+    //     isInt: true,
+    //   },
+    // },
     metric: {
       type: DataTypes.ENUM('sales', 'profit'),
       allowNull: false,
