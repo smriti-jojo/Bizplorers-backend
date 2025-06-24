@@ -98,25 +98,52 @@ exports.updateBuyerDetails = async (req, res) => {
   }
 };
 
+// exports.getBuyersByBrokerId = async (req, res) => {
+//   const { brokerId } = req.params;
+
+//   try {
+//     const buyers = await Buyer.findAll({
+//       where: {
+//         brokerId: brokerId
+//       }
+//     });
+
+//      if (buyers.length === 0) {
+//       return res.status(404).json({ message: 'No Buyers found for this broker.' });
+//     }
+//     return res.status(200).json(buyers);
+//   } catch (error) {
+//     console.error('Error fetching buyers:', error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
 exports.getBuyersByBrokerId = async (req, res) => {
   const { brokerId } = req.params;
 
   try {
     const buyers = await Buyer.findAll({
-      where: {
-        brokerId: brokerId
-      }
+      where: { brokerId },
+       include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email', 'phone', 'isVerified', 'isActive', 'role'],
+          where: { role: 'buyer' }, // Optional: ensures only users with buyer role
+        },
+      ],
     });
 
-     if (buyers.length === 0) {
+    if (buyers.length === 0) {
       return res.status(404).json({ message: 'No Buyers found for this broker.' });
     }
+
     return res.status(200).json(buyers);
   } catch (error) {
     console.error('Error fetching buyers:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // GET: Fetch all buyer profiles (admin/general access)
 // exports.getAllBuyers = async (req, res) => {
