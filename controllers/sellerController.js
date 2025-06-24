@@ -122,12 +122,32 @@ exports.getSellersByBrokerId = async (req, res) => {
 };
 
 // GET: Fetch all seller profiles (admin or general view)
+// exports.getAllSellers = async (req, res) => {
+//   try {
+//     const sellers = await Seller.findAll();
+//     if (!sellers || sellers.length === 0) {
+//       return res.status(404).json({ message: "No sellers found." });
+//     }
+//     res.status(200).json(sellers);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 exports.getAllSellers = async (req, res) => {
   try {
-    const sellers = await Seller.findAll();
+    const sellers = await Seller.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email', 'phone', 'isVerified', 'isActive', 'role'],
+        },
+      ],
+    });
+
     if (!sellers || sellers.length === 0) {
       return res.status(404).json({ message: "No sellers found." });
     }
+
     res.status(200).json(sellers);
   } catch (err) {
     res.status(500).json({ message: err.message });
