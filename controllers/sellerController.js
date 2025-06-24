@@ -95,31 +95,31 @@ exports.updateSeller = async (req, res) => {
   }
 };
 
-exports.getSellersByBrokerId = async (req, res) => {
-  const { brokerId } = req.params;
+// exports.getSellersByBrokerId = async (req, res) => {
+//   const { brokerId } = req.params;
 
-  try {
-    const sellers = await Seller.findAll({
-      where: {
-        brokerId: brokerId
-      },
-      include: [{ model: User 
+//   try {
+//     const sellers = await Seller.findAll({
+//       where: {
+//         brokerId: brokerId
+//       },
+//       include: [{ model: User 
         
 
-      }],
+//       }],
      
-    });
+//     });
     
 
-     if (sellers.length === 0) {
-      return res.status(404).json({ message: 'No sellers found for this broker.' });
-    }
-    return res.status(200).json(sellers);
-  } catch (error) {
-    console.error('Error fetching buyers:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-};
+//      if (sellers.length === 0) {
+//       return res.status(404).json({ message: 'No sellers found for this broker.' });
+//     }
+//     return res.status(200).json(sellers);
+//   } catch (error) {
+//     console.error('Error fetching buyers:', error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 // GET: Fetch all seller profiles (admin or general view)
 // exports.getAllSellers = async (req, res) => {
@@ -133,6 +133,32 @@ exports.getSellersByBrokerId = async (req, res) => {
 //     res.status(500).json({ message: err.message });
 //   }
 // };
+exports.getSellersByBrokerId = async (req, res) => {
+  const { brokerId } = req.params;
+
+  try {
+    const sellers = await Seller.findAll({
+      where: { brokerId },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email', 'phone', 'isVerified', 'isActive', 'role'],
+        },
+      ],
+    });
+
+    if (sellers.length === 0) {
+      return res.status(404).json({ message: 'No sellers found for this broker.' });
+    }
+
+    return res.status(200).json(sellers);
+  } catch (error) {
+    console.error('Error fetching sellers:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 exports.getAllSellers = async (req, res) => {
   try {
     const sellers = await Seller.findAll({
