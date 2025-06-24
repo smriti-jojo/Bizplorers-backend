@@ -1,5 +1,6 @@
-const PicklistCategory =require('../models/pickListCategory');
-const PicklistValue  =require('../models/pickListValue');
+// const PicklistCategory =require('../models/pickListCategory');
+// const PicklistValue  =require('../models/pickListValue');
+const { PicklistCategory, PicklistValue } = require('../models');
 
 // 📥 Add a new value
 exports.addValue = async (req, res) => {
