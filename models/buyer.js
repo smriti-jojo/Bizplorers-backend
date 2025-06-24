@@ -289,7 +289,7 @@ module.exports = (sequelize, DataTypes) => {
 },
 
     typeOfBuyer: {
-      type: DataTypes.ENUM('Individual', 'Organisation'),
+      type: DataTypes.ENUM('Individual', 'Organization'),
       allowNull: false,
       validate: { notEmpty: true },
     },
