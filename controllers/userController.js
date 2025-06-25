@@ -12,20 +12,7 @@ const { User, Seller,Buyer,Broker } = require('../models');
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      include: [
-        {
-          model: Seller,
-          as: 'seller',
-        },
-        {
-          model: Buyer,
-          as: 'buyer',
-        },
-        {
-          model: Broker,
-          as: 'broker',
-        },
-      ],
+       include: [Seller, Buyer, Broker],
     });
 
     res.status(200).json({ success: true, data: users });
