@@ -55,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.Seller, { foreignKey: 'userId', onDelete: 'CASCADE' });
     User.hasOne(models.Buyer, { foreignKey: 'userId', onDelete: 'CASCADE' });
     User.hasOne(models.Broker, { foreignKey: 'userId', onDelete: 'CASCADE' });
+//for broker association
+    User.hasMany(models.Seller, { foreignKey: 'brokerId', as: 'sellers' });
+User.hasMany(models.Buyer, { foreignKey: 'brokerId', as: 'buyers' });
+
   };
 
   return User;
