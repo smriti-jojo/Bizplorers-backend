@@ -168,7 +168,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    Seller.belongsTo(models.User, {
+    foreignKey: 'brokerId',
+    as: 'broker',
+  });
   };
+  
+
 
   return Seller;
 };

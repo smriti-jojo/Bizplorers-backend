@@ -119,21 +119,47 @@ exports.getUsersByRole = async (req, res) => {
   }
 };
 
+// exports.getBrokersWithBuyersAndSellers = async (req, res) => {
+//   try {
+//     const brokers = await User.findAll({
+//       where: { role: 'broker' },
+//       attributes: ['id','name', 'email'], // adjust based on your fields
+//       include: [
+//         {
+//           model: Seller,
+//           as: 'sellers',
+//           attributes: ['id', 'company_name', 'city', 'state', 'status'], // adjust
+//         },
+//         {
+//           model: Buyer,
+//           as: 'buyers',
+//           attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'], // adjust
+//         }
+//       ]
+//     });
+
+//     res.status(200).json(brokers);
+//   } catch (err) {
+//     console.error('Error fetching brokers:', err);
+//     res.status(500).json({ message: 'Server error while fetching brokers' });
+//   }
+// };
+
 exports.getBrokersWithBuyersAndSellers = async (req, res) => {
   try {
     const brokers = await User.findAll({
       where: { role: 'broker' },
-      attributes: ['id','name', 'email'], // adjust based on your fields
+      attributes: ['id', 'name', 'email'], // correct broker-level fields
       include: [
         {
           model: Seller,
           as: 'sellers',
-          attributes: ['id', 'company_name', 'city', 'state', 'status'], // adjust
+          attributes: ['id', 'company_name', 'city', 'state', 'status'],
         },
         {
           model: Buyer,
           as: 'buyers',
-          attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'], // adjust
+          attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'],
         }
       ]
     });
