@@ -12,6 +12,7 @@ const sellerRoutes = require('./routes/sellerRoutes');
 const pickListRoutes = require('./routes/pickListRoutes');
 const brokerRoutes = require('./routes/brokerRoutes');
 const userRoutes = require('./routes/userRoutes');
+const interestRoutes=require('./routes/interestRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use('/api/seller', sellerRoutes);
 app.use('/api/picklist', pickListRoutes);
 app.use('/api/broker', brokerRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/interests', interestRoutes);
 
 // Optional: Health check route for deployment
 app.get('/health', (req, res) => {
