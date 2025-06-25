@@ -175,7 +175,6 @@ exports.getBrokersWithBuyersAndSellers = async (req, res) => {
       include: [
         {
           model: User,
-          as: 'user',
           attributes: ['id', 'name', 'email']
         }
       ]
@@ -187,7 +186,6 @@ exports.getBrokersWithBuyersAndSellers = async (req, res) => {
       include: [
         {
           model: User,
-          as: 'user',
           attributes: ['id', 'name', 'email']
         }
       ]
