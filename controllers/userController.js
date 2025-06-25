@@ -123,7 +123,7 @@ exports.getBrokersWithBuyersAndSellers = async (req, res) => {
   try {
     const brokers = await User.findAll({
       where: { role: 'broker' },
-      attributes: ['id', 'userId', 'name', 'email'], // adjust based on your fields
+      attributes: ['id','name', 'email'], // adjust based on your fields
       include: [
         {
           model: Seller,
