@@ -147,22 +147,53 @@ exports.getUsersByRole = async (req, res) => {
 
 exports.getBrokersWithBuyersAndSellers = async (req, res) => {
   try {
+    // const brokers = await User.findAll({
+    //   where: { role: 'broker' },
+    //   attributes: ['id', 'name', 'email'], // correct broker-level fields
+    //   include: [
+    //     {
+    //       model: Seller,
+    //       as: 'sellers',
+    //       attributes: ['id', 'company_name', 'city', 'state', 'status'],
+    //     },
+    //     {
+    //       model: Buyer,
+    //       as: 'buyers',
+    //       attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'],
+    //     }
+    //   ]
+    // });
+
     const brokers = await User.findAll({
-      where: { role: 'broker' },
-      attributes: ['id', 'name', 'email'], // correct broker-level fields
+  where: { role: 'broker' },
+  attributes: ['id', 'name', 'email'],
+  include: [
+    {
+      model: Seller,
+      as: 'sellers',
+      attributes: ['id', 'company_name', 'city', 'state', 'status'],
       include: [
         {
-          model: Seller,
-          as: 'sellers',
-          attributes: ['id', 'company_name', 'city', 'state', 'status'],
-        },
-        {
-          model: Buyer,
-          as: 'buyers',
-          attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'],
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'email']
         }
       ]
-    });
+    },
+    {
+      model: Buyer,
+      as: 'buyers',
+      attributes: ['id', 'designation', 'ticketSizeMin', 'ticketSizeMax'],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'email']
+        }
+      ]
+    }
+  ]
+});
 
     res.status(200).json(brokers);
   } catch (err) {
