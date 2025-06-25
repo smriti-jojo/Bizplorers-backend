@@ -1,4 +1,4 @@
-const {User}=require('../models');
+const { User, Seller,Buyer,Broker } = require('../models');
 
 // exports.getAllUsers = async (req, res) => {
 //   try {
