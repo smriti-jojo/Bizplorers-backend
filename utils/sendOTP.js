@@ -43,7 +43,7 @@
 // };
 const nodemailer = require('nodemailer');
 
-module.exports = async function sendOTP(email, otp, customMessage) {
+module.exports = async function sendOTP(email, otp, customMessage,customSubject) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
