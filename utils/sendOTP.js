@@ -53,12 +53,13 @@ module.exports = async function sendOTP(email, otp, customMessage) {
   });
 
   const text = customMessage || `Use this OTP to verify your email: ${otp}`;
+  const subject=customSubject || "Your OTP Code";
 
   try {
     await transporter.sendMail({
       from: `"Bizplorers" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your OTP Code",
+      subject: subject,
       text: text,
     });
     console.log(`OTP sent to ${email}`);

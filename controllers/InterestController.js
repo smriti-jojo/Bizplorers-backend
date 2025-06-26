@@ -38,8 +38,9 @@ exports.sendInterest = async (req, res) => {
 
     // ✅ Send email to receiver using sendOTP for notification
     const customMessage = `Hi ${receiver.name},\n\nYou have received a new ${type} from ${sender.name} (${sender.email}).\nPlease log in to Bizplorers to take action.`;
-
-    await sendOTP(receiver.email, null, customMessage); // ✅ no OTP, just use custom message
+    // const customSubject= `New ${type} from ${sender.name} on Bizplorers`
+    const customSubject=`You've received a new ${type} on Bizplorers`;
+    await sendOTP(receiver.email, null, customMessage, customSubject); // ✅ no OTP, just use custom message
 
     return res.status(201).json({ message: `${type} sent successfully`, interest });
   } catch (error) {
