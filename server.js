@@ -23,7 +23,7 @@ app.use(express.json());
 
 // Simple test route
 app.get('/', (req, res) => {
-  res.send("✅ Hello, server is running!");
+  res.send("Hello, server is running!");
 });
 
 // API Routes
@@ -44,23 +44,23 @@ app.get('/health', (req, res) => {
 const startServer = async () => {
   try {
     await db.sequelize.authenticate();
-    console.log("✅ Database connected successfully");
+    console.log("Database connected successfully");
 //  await db.sequelize.sync({ force: false }); //for prod
     //  await db.sequelize.sync({ alter: true }); // Use force: true only in dev with caution
     // await db.sequelize.sync({ force: true });
     await db.sequelize.sync({ alter: true }); // or db.sequelize.sync({ alter: true }) if you're still evolving schema
 
 
-    console.log("✅ All models synced successfully");
+    console.log("All models synced successfully");
 
     await createAdminIfNotExists();
-    console.log("✅ Admin checked/created");
+    console.log("Admin checked/created");
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server is live at http://localhost:${PORT}`);
+      console.log(`Server is live at http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Failed to initialize server:", err);
+    console.error("Failed to initialize server:", err);
   }
 };
 
@@ -68,5 +68,5 @@ startServer();
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('🚨 Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     email: { type: DataTypes.STRING, unique: true },
     password: DataTypes.STRING,
-    role: { type: DataTypes.ENUM('buyer', 'seller', 'broker', 'admin','nre'), allowNull: false },
+    role: { type: DataTypes.ENUM('buyer', 'seller', 'broker', 'admin'), allowNull: false },
     name: DataTypes.STRING,
     phone: DataTypes.BIGINT,
     otp: DataTypes.STRING,

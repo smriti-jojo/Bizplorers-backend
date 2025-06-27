@@ -62,59 +62,56 @@
 // };
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const User = require('../models/user');
 const sendOTP = require('../utils/sendOTP');
-// const Broker=require('../models/broker');
-// const Seller=require('../models/seller');
-// const Buyer=require('../models/buyer');
 const { User, Seller,Buyer,Broker } = require('../models');
 
-// exports.register = async (req, res) => {
-//   const { email, password, role, name, phone } = req.body;
+exports.register = async (req, res) => {
+  const { email, password, role, name, phone } = req.body;
 
-//   try {
-//     // ✅ Correct Sequelize syntax
-//     const existingUser = await User.findOne({ where: { email } });
+  try {
+    // ✅ Correct Sequelize syntax
+    const existingUser = await User.findOne({ where: { email } });
 
-//     if (existingUser) {
-//       if (!existingUser.isVerified) {
-//         // If unverified user exists, resend OTP
-//         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-//         await existingUser.update({ otp });
-//         sendOTP(email, otp).catch(console.error); // Don't block response
-//         return res.json({ message: 'OTP resent to existing unverified user.' });
-//       }
+    if (existingUser) {
+      if (!existingUser.isVerified) {
+        // If unverified user exists, resend OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        await existingUser.update({ otp });
+        sendOTP(email, otp).catch(console.error); // Don't block response
+        return res.json({ message: 'OTP resent to existing unverified user.' });
+      }
 
-//       return res.status(400).json({ error: 'User already exists' });
-//     }
+      return res.status(400).json({ error: 'User already exists' });
+    }
 
-//     const hashed = await bcrypt.hash(password, 10);
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashed = await bcrypt.hash(password, 10);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-//     const user = await User.create({
-//       email,
-//       password: hashed,
-//       role,
-//       name,
-//       phone,
-//       otp,
-//       isVerified: false,
-//     });
+    const user = await User.create({
+      email,
+      password: hashed,
+      role,
+      name,
+      phone,
+      otp,
+      isVerified: false,
+    });
 
-//     sendOTP(email, otp).catch(console.error); // Async, avoid waiting
+    sendOTP(email, otp).catch(console.error); // Async, avoid waiting
 
-//     return res.json({ message: 'OTP sent to email for verification.' });
-//   } catch (err) {
-//     console.error('Registration error:', err);
+    return res.json({ message: 'OTP sent to email for verification.' });
+  } catch (err) {
+    console.error('Registration error:', err);
 
-//     if (err.name === 'SequelizeUniqueConstraintError') {
-//       return res.status(400).json({ error: 'User already exists' });
-//     }
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: 'User already exists' });
+    }
 
-//     return res.status(500).json({ error: 'Registration failed due to server error.' });
-//   }
-// };
+    return res.status(500).json({ error: 'Registration failed due to server error.' });
+  }
+};
 
+{/***Production verification code*/}
 // exports.verifyOtp = async (req, res) => {
 //   const { email, otp } = req.body;
 
@@ -137,70 +134,8 @@ const { User, Seller,Buyer,Broker } = require('../models');
 //   }
 // };
 
-exports.register = async (req, res) => {
-  const {
-    email,
-    password,
-    role,
-    name,
-    phone,
-    country,
-    passportNumber
-  } = req.body;
 
-  try {
-    const existingUser = await User.findOne({ where: { email } });
-
-    if (existingUser) {
-      if (!existingUser.isVerified) {
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        await existingUser.update({ otp });
-        sendOTP(email, otp).catch(console.error);
-        return res.json({ message: 'OTP resent to existing unverified user.' });
-      }
-
-      return res.status(400).json({ error: 'User already exists' });
-    }
-
-    // ✅ Validation for NRE
-    if (role === 'nre') {
-      if (!country || !passportNumber) {
-        return res.status(400).json({
-          error: 'Country and Passport Number are required for NRE registration.'
-        });
-      }
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const user = await User.create({
-      email,
-      password: hashed,
-      role,
-      name,
-      phone,
-      otp,
-      isVerified: false,
-      country: role === 'nre' ? country : null,
-      passportNumber: role === 'nre' ? passportNumber : null
-    });
-
-    sendOTP(email, otp).catch(console.error);
-
-    return res.json({ message: 'OTP sent to email for verification.' });
-  } catch (err) {
-    console.error('Registration error:', err);
-
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'User already exists' });
-    }
-
-    return res.status(500).json({ error: 'Registration failed due to server error.' });
-  }
-};
-
-
+{/**VerifyOTP for dev/testing */}
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
