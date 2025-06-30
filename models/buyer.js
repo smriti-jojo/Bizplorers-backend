@@ -372,18 +372,18 @@ module.exports = (sequelize, DataTypes) => {
     //     isInt: true,
     //   },
     // },
-    metric: {
-      type: DataTypes.ENUM('sales', 'profit'),
-      allowNull: false,
-      validate: { notEmpty: true },
-    },
-    maxMultiple: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
-    },
+    // metric: {
+    //   type: DataTypes.ENUM('sales', 'profit'),
+    //   allowNull: false,
+    //   validate: { notEmpty: true },
+    // },
+    // maxMultiple: {
+    //   type: DataTypes.FLOAT,
+    //   allowNull: false,
+    //   validate: {
+    //     min: 0,
+    //   },
+    // },
     preferredArrangement: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
