@@ -100,3 +100,56 @@ exports.assignMultipleUsersToBroker = async (req, res) => {
   }
 };
 
+{/**Create New Buyer/Seller by brokerId*/}
+// POST /broker/register-user
+exports.registerUserByBroker = async (req, res) => {
+  const brokerUserId = req.user.id; // From JWT
+  const { name, email, phone, role } = req.body;
+
+  try {
+    // Role check: only broker can use this endpoint
+    if (req.user.role !== 'broker') {
+      return res.status(403).json({ error: 'Only brokers can register users.' });
+    }
+
+    // Prevent invalid roles
+    if (!['buyer', 'seller'].includes(role)) {
+      return res.status(400).json({ error: 'Role must be buyer or seller only.' });
+    }
+
+    // Check if email already exists
+    const existing = await User.findOne({ where: { email } });
+    if (existing) {
+      return res.status(400).json({ error: 'User with this email already exists.' });
+    }
+
+    // Get broker user (for password reuse)
+    const brokerUser = await User.findByPk(brokerUserId);
+    if (!brokerUser) {
+      return res.status(404).json({ error: 'Broker not found.' });
+    }
+
+    const newUser = await User.create({
+      name,
+      email,
+      phone,
+      role,
+      password: brokerUser.password, // Reuse broker's hashed password
+      isVerified: true,
+      brokerUserId: brokerUserId
+    });
+
+    return res.status(201).json({
+      message: 'User created by broker successfully.',
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role
+      }
+    });
+  } catch (err) {
+    console.error('Broker registration error:', err);
+    return res.status(500).json({ error: 'Server error while registering user by broker.' });
+  }
+};
