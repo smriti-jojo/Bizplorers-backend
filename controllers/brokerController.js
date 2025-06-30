@@ -141,6 +141,7 @@ exports.registerUserByBroker = async (req, res) => {
 
     return res.status(201).json({
       message: 'User created by broker successfully.',
+      success: true,
       user: {
         id: newUser.id,
         name: newUser.name,
@@ -150,6 +151,6 @@ exports.registerUserByBroker = async (req, res) => {
     });
   } catch (err) {
     console.error('Broker registration error:', err);
-    return res.status(500).json({ error: 'Server error while registering user by broker.' });
+    return res.status(500).json({ error: 'Server error while registering user by broker.',success: false });
   }
 };
