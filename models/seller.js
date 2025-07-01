@@ -88,6 +88,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     company_name: { type: DataTypes.STRING, allowNull: false },
+     headline: { type: DataTypes.STRING, allowNull: false },
     website_url: { type: DataTypes.STRING, allowNull: false },
     CIN: { type: DataTypes.STRING, allowNull: true },
     company_linkedin: { type: DataTypes.STRING, allowNull: false },
