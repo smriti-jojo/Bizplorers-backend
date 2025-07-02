@@ -8,29 +8,52 @@ const { User, Seller,Buyer,Broker } = require('../models');
 // controllers/buyerController.js
 // const { Buyer, User } = require('../models');
 
-exports.fillBuyerDetails = async (req, res) => {
-  try {
-    // Confirm user exists first
-    const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
+// exports.fillBuyerDetails = async (req, res) => {
+//   try {
+//     // Confirm user exists first
+//     const user = await User.findByPk(req.user.id);
+//     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Check if buyer profile already exists
-    const exists = await Buyer.findOne({ where: { userId: req.user.id } });
-    if (exists) return res.status(400).json({ error: 'Buyer profile already filled' });
+//     // Check if buyer profile already exists
+//     const exists = await Buyer.findOne({ where: { userId: req.user.id } });
+//     if (exists) return res.status(400).json({ error: 'Buyer profile already filled' });
 
-    const payload = { ...req.body, userId: req.user.id };
+//     const payload = { ...req.body, userId: req.user.id };
 
-    if (req.user.role === 'broker') {
-      payload.brokerId = req.user.id;
-    }
+//     if (req.user.role === 'broker') {
+//       payload.brokerId = req.user.id;
+//     }
 
-    const buyer = await Buyer.create(payload);
-    res.status(201).json(buyer);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+//     const buyer = await Buyer.create(payload);
+//     res.status(201).json(buyer);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
 
+exports.fillBuyerDetails=async(req,res)=>{
+  const targetUserId =
+  req.user.role === "broker" && req.body.userId ? req.body.userId : req.user.id;
+
+// Confirm user exists
+const user = await User.findByPk(targetUserId);
+if (!user) return res.status(404).json({ error: "User not found" });
+
+// Check if buyer profile already exists
+const exists = await Buyer.findOne({ where: { userId: targetUserId } });
+if (exists) return res.status(400).json({ error: "Buyer profile already filled" });
+
+// Proceed with creating the buyer
+const payload = { ...req.body, userId: targetUserId };
+
+if (req.user.role === "broker") {
+  payload.brokerId = req.user.id;
+}
+
+const buyer = await Buyer.create(payload);
+res.status(201).json(buyer);
+
+}
 
 
 // exports.fillBuyerDetails = async (req, res) => {
