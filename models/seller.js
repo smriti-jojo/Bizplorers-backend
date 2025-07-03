@@ -91,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
      headline: { type: DataTypes.STRING, allowNull: false, defaultValue: 'Default headline' },
     website_url: { type: DataTypes.STRING, allowNull: false },
     CIN: { type: DataTypes.STRING, allowNull: true },
-    company_linkedin: { type: DataTypes.STRING, allowNull: false },
+    company_linkedin: { type: DataTypes.STRING, allowNull: true },
     description_business: { type: DataTypes.TEXT, allowNull: false },
     numcofounder: { type: DataTypes.INTEGER, allowNull: false },
     teamSize: { type: DataTypes.INTEGER, allowNull: false },
@@ -100,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
     month: { type: DataTypes.INTEGER, allowNull: false },
     cofounderLinks: {
       type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
+      allowNull: true,
       defaultValue: [],
     },
     businessCategory: { type: DataTypes.STRING, allowNull: false },
