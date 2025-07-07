@@ -1,4 +1,4 @@
-const { User, Seller,Buyer,Broker } = require('../models');
+const { User, Seller,Buyer,Broker,Interest, Invite } = require('../models');
 
 // exports.getAllUsers = async (req, res) => {
 //   try {
@@ -197,5 +197,43 @@ exports.getBrokersWithBuyersAndSellers = async (req, res) => {
   } catch (err) {
     console.error('Error fetching brokers:', err);
     res.status(500).json({ message: 'Server error while fetching brokers' });
+  }
+};
+
+
+
+// Admin: Fetch all sent interests with user info
+exports.getAllSentInterests = async (req, res) => {
+  try {
+    const interests = await Interest.findAll({
+      include: [
+        { model: User, as: 'sender', attributes: ['id', 'name', 'email'] },
+        { model: User, as: 'receiver', attributes: ['id', 'name', 'email'] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.status(200).json({ interests });
+  } catch (error) {
+    console.error('Error fetching sent interests:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Admin: Fetch all received invites with user info
+exports.getAllReceivedInvites = async (req, res) => {
+  try {
+    const invites = await Invite.findAll({
+      include: [
+        { model: User, as: 'sender', attributes: ['id', 'name', 'email'] },
+        { model: User, as: 'receiver', attributes: ['id', 'name', 'email'] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.status(200).json({ invites });
+  } catch (error) {
+    console.error('Error fetching received invites:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

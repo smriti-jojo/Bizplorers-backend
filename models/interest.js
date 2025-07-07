@@ -1,28 +1,43 @@
-// models/Interest.js
+// module.exports = (sequelize, DataTypes) => {
+//   const Interest = sequelize.define('Interest', {
+//     senderId: {
+//       type: DataTypes.INTEGER,
+//       allowNull: false
+//     },
+//     receiverId: {
+//       type: DataTypes.INTEGER,
+//       allowNull: false
+//     }
+//   }, {
+//     tableName: 'interests',
+//     timestamps: true
+//   });
+
+//   Interest.associate = (models) => {
+//     Interest.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' });
+//     Interest.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId' });
+//   };
+
+//   return Interest;
+// };
 module.exports = (sequelize, DataTypes) => {
   const Interest = sequelize.define('Interest', {
     senderId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: false
     },
     receiverId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.ENUM('interest', 'invite'),
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.STRING,
-      defaultValue: 'pending',
-    },
+      allowNull: false
+    }
+  }, {
+    tableName: 'interests',
+    timestamps: true
   });
 
-  // Optional: associate with User model
   Interest.associate = (models) => {
-    Interest.belongsTo(models.User, { as: 'Sender', foreignKey: 'senderId' });
-    Interest.belongsTo(models.User, { as: 'Receiver', foreignKey: 'receiverId' });
+    Interest.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' });
+    Interest.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId' });
   };
 
   return Interest;

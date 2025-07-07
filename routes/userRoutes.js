@@ -17,6 +17,8 @@ router.post('/restore/:id', auth, userController.restoreUser); // restore soft-d
 router.patch('/comment/:id', auth, userController.updateComment);
 router.get('/role-based-users',userController.getUsersByRole);
 router.get('/brokers-with-buyers-and-sellers',auth,userController.getBrokersWithBuyersAndSellers);
+router.get('/sent-interests', userController.getAllSentInterests);
+router.get('/received-invites', userController.getAllReceivedInvites);
 
 
 // PUT /seller - Update seller profile
