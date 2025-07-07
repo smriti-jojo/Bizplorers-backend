@@ -1,6 +1,5 @@
 const { Invite, User } = require('../models');
 const sendOTP = require('../utils/sendOTP');
-
 const { Op } = require('sequelize');
 
 
@@ -21,11 +20,10 @@ exports.sendInvite = async (req, res) => {
     }
 
     // ✅ Check last 15 days
-    const existing = await Interest.findOne({
+    const existing = await Invite.findOne({
       where: {
         senderId,
         receiverId,
-        type: 'invite',
         createdAt: {
           [Op.gte]: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000)
         }
@@ -38,7 +36,7 @@ exports.sendInvite = async (req, res) => {
       });
     }
 
-    const invite = await Interest.create({ senderId, receiverId, type: 'invite' });
+    const invite = await Invite.create({ senderId, receiverId });
 
     // ✅ Notify
     const msg = `Hi ${receiver.name},\n\nYou received a new invite from ${sender.name} (${sender.email}).`;
@@ -50,6 +48,9 @@ exports.sendInvite = async (req, res) => {
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
+
+
 
 
 // exports.sendInvite = async (req, res) => {
