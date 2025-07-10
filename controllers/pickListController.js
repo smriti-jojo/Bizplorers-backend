@@ -303,7 +303,6 @@ exports.getValuesByCategory = async (req, res) => {
   return res.json(values);
 };
 
-// 📥 Add multiple picklist values
 exports.addMultiplePicklistValues = async (req, res) => {
   try {
     const { picklists } = req.body;
@@ -317,6 +316,7 @@ exports.addMultiplePicklistValues = async (req, res) => {
     for (const [categoryName, values] of Object.entries(picklists)) {
       if (!Array.isArray(values) || values.length === 0) continue;
 
+      // Get or create category
       let category = await PicklistCategory.findOne({ where: { name: categoryName } });
       if (!category) {
         category = await PicklistCategory.create({ name: categoryName });
@@ -324,37 +324,60 @@ exports.addMultiplePicklistValues = async (req, res) => {
 
       results[categoryName] = [];
 
-      const uniqueValues = [...new Set(values)];
-
-      for (const entry of uniqueValues) {
+      for (const entry of values) {
         const value = typeof entry === 'string' ? entry : entry.value;
-        const parent_id = typeof entry === 'object' ? entry.parent_id || null : null;
+        const parentId = typeof entry === 'object' ? entry.parent_id : null;
 
-        const [picklistValue, created] = await PicklistValue.findOrCreate({
-          where: { category_id: category.id, value, parent_id },
-          defaults: { is_active: true },
+        // 🔍 Check if this value already exists with the same parent and category
+        let existingValue = await PicklistValue.findOne({
+          where: {
+            value,
+            category_id: category.id,
+            parent_id: parentId || null,
+          },
         });
 
-        if (!created && !picklistValue.is_active) {
-          picklistValue.is_active = true;
-          await picklistValue.save();
+        // ♻️ Reactivate if inactive
+        if (existingValue) {
+          if (!existingValue.is_active) {
+            existingValue.is_active = true;
+            await existingValue.save();
+          }
+
+          results[categoryName].push({
+            id: existingValue.id,
+            value: existingValue.value,
+            is_active: existingValue.is_active,
+            created: false,
+          });
+          continue;
         }
 
+        // 🆕 If not found, create
+        const newValue = await PicklistValue.create({
+          value,
+          category_id: category.id,
+          parent_id: parentId || null,
+          is_active: true,
+        });
+
         results[categoryName].push({
-          id: picklistValue.id,
-          value: picklistValue.value,
-          is_active: picklistValue.is_active,
-          created,
+          id: newValue.id,
+          value: newValue.value,
+          is_active: newValue.is_active,
+          created: true,
         });
       }
     }
 
-    res.status(200).json({ message: 'Picklist values added/updated.', data: results });
+    return res.status(200).json({ message: 'Picklist values added/updated.', data: results });
+
   } catch (error) {
     console.error('Error in addMultiplePicklistValues:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 };
+
 
 // ❌ Soft delete (deactivate)
 exports.deactivateValue = async (req, res) => {
