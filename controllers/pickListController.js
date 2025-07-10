@@ -524,14 +524,31 @@ exports.getBuyerCitiesByCountry = async (req, res) => {
     const { countryId } = req.query;
     if (!countryId) return res.status(400).json({ message: 'countryId is required' });
 
-    // ✅ Use existing category
+    // Step 1: Get state category
+    const stateCategory = await PicklistCategory.findOne({ where: { name: 'Business Location Preference State' } });
+    if (!stateCategory) return res.status(404).json({ message: 'State category not found' });
+
+    // Step 2: Get all states under the country
+    const states = await PicklistValue.findAll({
+      where: {
+        category_id: stateCategory.id,
+        parent_id: countryId,
+        is_active: true,
+      },
+    });
+
+    const stateIds = states.map(state => state.id);
+    if (stateIds.length === 0) return res.json([]); // No states, no cities
+
+    // Step 3: Get city category
     const cityCategory = await PicklistCategory.findOne({ where: { name: 'Business Location Preference City' } });
     if (!cityCategory) return res.status(404).json({ message: 'City category not found' });
 
+    // Step 4: Get all cities where parent_id is one of the stateIds
     const cities = await PicklistValue.findAll({
       where: {
         category_id: cityCategory.id,
-        parent_id: countryId,
+        parent_id: stateIds,
         is_active: true,
       },
       order: [['value', 'ASC']],
