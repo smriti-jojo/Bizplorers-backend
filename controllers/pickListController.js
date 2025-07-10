@@ -519,26 +519,36 @@ exports.getCitiesByState = async (req, res) => {
 };
 
 // 🧑‍💼 Get cities by countryId (for buyer)
+// ‑ Uses the SAME "Business Location Preference City" category as seller
 exports.getBuyerCitiesByCountry = async (req, res) => {
   try {
     const { countryId } = req.query;
-    if (!countryId) return res.status(400).json({ message: 'countryId is required' });
+    if (!countryId) {
+      return res.status(400).json({ message: 'countryId is required' });
+    }
 
-    const cityCategory = await PicklistCategory.findOne({ where: { name: 'Buyer Location City' } });
-    if (!cityCategory) return res.status(404).json({ message: 'Buyer City category not found' });
+    // 👉  Re‑use the seller city category
+    const cityCategory = await PicklistCategory.findOne({
+      where: { name: 'Business Location Preference City' }
+    });
+    if (!cityCategory) {
+      return res.status(404).json({ message: 'City category not found' });
+    }
 
     const cities = await PicklistValue.findAll({
       where: {
         category_id: cityCategory.id,
-        parent_id: countryId,
+        parent_id: countryId,     // country is the parent when there is no state layer
         is_active: true,
       },
       order: [['value', 'ASC']],
     });
 
     res.json(cities);
+
   } catch (err) {
     console.error('Error fetching buyer cities:', err);
     res.status(500).json({ message: 'Server error while fetching buyer cities.' });
   }
 };
+
