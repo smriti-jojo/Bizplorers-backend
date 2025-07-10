@@ -522,50 +522,28 @@ exports.getCitiesByState = async (req, res) => {
 exports.getBuyerCitiesByCountry = async (req, res) => {
   try {
     const { countryId } = req.query;
+    if (!countryId) return res.status(400).json({ message: 'countryId is required' });
 
-    if (!countryId) {
-      return res.status(400).json({ message: 'countryId is required' });
-    }
+    // ✅ Use existing category
+    const cityCategory = await PicklistCategory.findOne({ where: { name: 'Business Location Preference City' } });
+    if (!cityCategory) return res.status(404).json({ message: 'City category not found' });
 
-    // ✅ Potential category names (Buyer or Seller)
-    const possibleCategoryNames = [
-      'Buyer Location City',
-      'Business Location Preference City',
-      ' Business Location Preference City' // handles accidental whitespace
-    ];
-
-    let cityCategory = null;
-
-    // 🔁 Try finding a matching category name
-    for (const rawName of possibleCategoryNames) {
-      const trimmedName = rawName.trim();
-      cityCategory = await PicklistCategory.findOne({
-        where: { name: trimmedName }
-      });
-      if (cityCategory) break;
-    }
-
-    // ❌ If still not found
-    if (!cityCategory) {
-      return res.status(404).json({ message: 'City category not found' });
-    }
-
-    // ✅ Fetch cities for this countryId under found category
     const cities = await PicklistValue.findAll({
       where: {
         category_id: cityCategory.id,
         parent_id: countryId,
-        is_active: true
+        is_active: true,
       },
-      order: [['value', 'ASC']]
+      order: [['value', 'ASC']],
     });
 
-    res.status(200).json(cities);
+    res.json(cities);
   } catch (err) {
     console.error('Error fetching buyer cities:', err);
     res.status(500).json({ message: 'Server error while fetching buyer cities.' });
   }
 };
+
 
 
 
