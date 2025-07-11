@@ -569,8 +569,6 @@ exports.getAllPicklistCategoriesWithValues = async (req, res) => {
       include: [
         {
           model: PicklistValue,
-          as: 'values', // this alias should match the `hasMany` association if defined
-          where: {}, // fetch all, even inactive
           required: false,
         },
       ],
@@ -580,7 +578,7 @@ exports.getAllPicklistCategoriesWithValues = async (req, res) => {
     const formatted = categories.map(category => ({
       id: category.id,
       name: category.name,
-      values: category.values.map(value => ({
+      values: category.PicklistValues.map(value => ({
         id: value.id,
         value: value.value,
         is_active: value.is_active,
