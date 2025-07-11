@@ -563,4 +563,39 @@ exports.getBuyerCitiesByCountry = async (req, res) => {
 
 
 
+exports.getAllPicklistCategoriesWithValues = async (req, res) => {
+  try {
+    const categories = await PicklistCategory.findAll({
+      include: [
+        {
+          model: PicklistValue,
+          as: 'values', // this alias should match the `hasMany` association if defined
+          where: {}, // fetch all, even inactive
+          required: false,
+        },
+      ],
+      order: [['name', 'ASC']],
+    });
+
+    const formatted = categories.map(category => ({
+      id: category.id,
+      name: category.name,
+      values: category.values.map(value => ({
+        id: value.id,
+        value: value.value,
+        is_active: value.is_active,
+        parent_id: value.parent_id,
+      })),
+    }));
+
+    res.status(200).json({ data: formatted });
+  } catch (error) {
+    console.error('Error fetching categories with values:', error);
+    res.status(500).json({ message: 'Server error while fetching picklist data.' });
+  }
+};
+
+
+
+
 

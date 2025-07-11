@@ -22,6 +22,7 @@ const controller = require('../controllers/pickListController');
 router.post('/add', controller.addValue);
 
 // Add multiple values
+//done
 router.post('/add-multiple', controller.addMultiplePicklistValues);
 
 // Get values by category
@@ -40,18 +41,24 @@ router.delete('/delete/:id', controller.hardDeleteValue);
 router.put('/update', controller.updateValue);
 
 // Get all categories
+//done
 router.get('/categories', controller.getCategories);
 
 // Admin: Get all picklists grouped
+//done
 router.get('/admin/all', controller.getAllPicklists);
 
 // Get states by country
+//done
 router.get('/states', controller.getStatesByCountry);
 
 // Get cities by state
+//done
 router.get('/cities', controller.getCitiesByState);
+router.get('/all-categories-values', controller.getAllPicklistCategoriesWithValues);
 
 // Get buyer cities by country
+//done
 router.get('/buyer-cities', controller.getBuyerCitiesByCountry);
 
 module.exports = router;
