@@ -256,22 +256,53 @@
 const { PicklistCategory, PicklistValue } = require('../models');
 
 // 📥 Add a new picklist value
+// exports.addValue = async (req, res) => {
+//   try {
+//     const { category, value, parent_id = null } = req.body;
+//     if (!category || !value) return res.status(400).json({ message: "Missing fields." });
+
+//     let categoryObj = await PicklistCategory.findOne({ where: { name: category } });
+//     if (!categoryObj) {
+//       categoryObj = await PicklistCategory.create({ name: category });
+//     }
+
+//     const [picklistValue, created] = await PicklistValue.findOrCreate({
+//       where: {
+//         category_id: categoryObj.id,
+//         value,
+//         parent_id,
+//       },
+//       defaults: { is_active: true }
+//     });
+
+//     if (!created && !picklistValue.is_active) {
+//       picklistValue.is_active = true;
+//       await picklistValue.save();
+//     }
+
+//     return res.status(200).json({ message: 'Value added/activated.', data: picklistValue });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Server error.' });
+//   }
+// };
+
 exports.addValue = async (req, res) => {
   try {
-    const { category, value, parent_id = null } = req.body;
-    if (!category || !value) return res.status(400).json({ message: "Missing fields." });
+    const { category_id, value, parent_id = null } = req.body;
+    if (!category_id || !value) return res.status(400).json({ message: "Missing fields." });
 
-    let categoryObj = await PicklistCategory.findOne({ where: { name: category } });
-    if (!categoryObj) {
-      categoryObj = await PicklistCategory.create({ name: category });
-    }
+    const categoryObj = await PicklistCategory.findByPk(category_id);
+    if (!categoryObj) return res.status(404).json({ message: "Invalid category ID." });
+
+    const whereClause = {
+      category_id,
+      value,
+      parent_id: parent_id ?? null,
+    };
 
     const [picklistValue, created] = await PicklistValue.findOrCreate({
-      where: {
-        category_id: categoryObj.id,
-        value,
-        parent_id,
-      },
+      where: whereClause,
       defaults: { is_active: true }
     });
 
@@ -286,6 +317,7 @@ exports.addValue = async (req, res) => {
     res.status(500).json({ message: 'Server error.' });
   }
 };
+
 
 // 🔍 Get all values by category name
 exports.getValuesByCategory = async (req, res) => {
