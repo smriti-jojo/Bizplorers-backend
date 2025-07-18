@@ -55,6 +55,7 @@ router.get('/states', controller.getStatesByCountry);
 // Get cities by state
 //done
 router.get('/cities', controller.getCitiesByState);
+//done
 router.get('/all-categories-values', controller.getAllPicklistCategoriesWithValues);
 
 // Get buyer cities by country

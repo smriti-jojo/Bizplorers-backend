@@ -390,7 +390,7 @@ exports.deactivateValue = async (req, res) => {
   res.json({ message: 'Value deactivated.' });
 };
 
-// 💀 Hard delete
+//  Hard delete
 exports.hardDeleteValue = async (req, res) => {
   const { id } = req.params;
   const value = await PicklistValue.findByPk(id);
