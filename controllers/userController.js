@@ -46,7 +46,9 @@ exports.deleteUser = async (req, res) => {
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    await user.destroy(); // Soft delete
+    // await user.destroy(); // Soft delete
+    await user.destroy({ force: true }); // Hard delete
+
     res.status(200).json({ message: 'User soft-deleted successfully' });
   } catch (error) {
     console.error('Error soft deleting user:', error);
