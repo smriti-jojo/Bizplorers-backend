@@ -38,7 +38,7 @@ router.put('/deactivate', controller.deactivateValue);
 router.delete('/delete/:id', controller.hardDeleteValue);
 
 // Update value
-router.put('/update', controller.updateValue);
+router.post('/update', controller.updateValue);
 
 // Get all categories
 //done
