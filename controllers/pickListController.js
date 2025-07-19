@@ -433,15 +433,39 @@ exports.hardDeleteValue = async (req, res) => {
 };
 
 // ✏️ Update value
-exports.updateValue = async (req, res) => {
-  const { id, new_value } = req.body;
-  const value = await PicklistValue.findByPk(id);
-  if (!value) return res.status(404).json({ message: 'Value not found' });
+// exports.updateValue = async (req, res) => {
+//   const { id, new_value } = req.body;
+//   const value = await PicklistValue.findByPk(id);
+//   if (!value) return res.status(404).json({ message: 'Value not found' });
 
-  value.value = new_value;
-  await value.save();
-  res.json({ message: 'Value updated.', value });
+//   value.value = new_value;
+//   await value.save();
+//   res.json({ message: 'Value updated.', value });
+// };
+exports.updateValue = async (req, res) => {
+  try {
+    const { id, new_value } = req.body;
+
+    if (!id || !new_value) {
+      return res.status(400).json({ message: 'Missing id or new_value' });
+    }
+
+    const value = await PicklistValue.findByPk(id);
+    if (!value) {
+      return res.status(404).json({ message: 'Value not found' });
+    }
+
+    value.value = new_value;
+    await value.save();
+
+    res.json({ message: 'Value updated.', value });
+
+  } catch (error) {
+    console.error('Update failed:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
 };
+
 
 // 📄 Get all picklist categories
 exports.getCategories = async (req, res) => {
