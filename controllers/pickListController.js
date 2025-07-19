@@ -449,7 +449,8 @@ exports.updateValue = async (req, res) => {
     if (!id || !new_value) {
       return res.status(400).json({ message: 'Missing id or new_value' });
     }
-
+console.log("id",id);
+console.log("new_value",new_value);
     const value = await PicklistValue.findByPk(id);
     if (!value) {
       return res.status(404).json({ message: 'Value not found' });
