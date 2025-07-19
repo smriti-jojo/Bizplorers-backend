@@ -46,6 +46,20 @@ exports.deleteUser = async (req, res) => {
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+     // Manually delete all dependent records
+     const userId = user.id;
+    await Interest.destroy({
+      where: {
+        [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+      },
+    });
+
+    await Invite.destroy({
+      where: {
+        [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+      },
+    });
+
     // await user.destroy(); // Soft delete
     await user.destroy({ force: true }); // Hard delete
 
