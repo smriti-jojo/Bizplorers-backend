@@ -112,9 +112,12 @@ exports.deleteUser = async (req, res) => {
 
     console.log("Deleting user with id:", id);
     const user = await User.findByPk(id);
+    console.log("user--detail----",user);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const userId = user.id;
+     console.log("user--id----",user.id);
+     console.log("userId----",userId);
 
     const interests = await Interest.findAll({
       where: {
