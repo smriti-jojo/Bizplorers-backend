@@ -1,4 +1,5 @@
 const { User, Seller,Buyer,Broker,Interest, Invite } = require('../models');
+const { Op } = require('sequelize');
 
 // exports.getAllUsers = async (req, res) => {
 //   try {
