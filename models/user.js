@@ -119,11 +119,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'managedUsers', // for BrokerUser.getManagedUsers()
       foreignKey: 'brokerUserId'
     });
-User.hasMany(models.Interest, { as: 'sentInterests', foreignKey: 'senderId' });
-User.hasMany(models.Interest, { as: 'receivedInterests', foreignKey: 'receiverId' });
+User.hasMany(models.Interest, { as: 'sentInterests', foreignKey: 'senderId',onDelete: 'CASCADE', });
+User.hasMany(models.Interest, { as: 'receivedInterests', foreignKey: 'receiverId' ,onDelete: 'CASCADE',});
 
-User.hasMany(models.Invite, { as: 'sentInvites', foreignKey: 'senderId' });
-User.hasMany(models.Invite, { as: 'receivedInvites', foreignKey: 'receiverId' });
+User.hasMany(models.Invite, { as: 'sentInvites', foreignKey: 'senderId',onDelete: 'CASCADE', });
+User.hasMany(models.Invite, { as: 'receivedInvites', foreignKey: 'receiverId',onDelete: 'CASCADE', });
 
   };
 
