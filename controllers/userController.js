@@ -105,6 +105,54 @@ exports.updateUser = async (req, res) => {
 //   }
 // };
 
+// exports.deleteUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     if (!id) return res.status(400).json({ message: 'User ID is required' });
+
+//     console.log("Deleting user with id:", id);
+//     const user = await User.findByPk(id);
+//     console.log("user--detail----",user);
+//     if (!user) return res.status(404).json({ message: 'User not found' });
+
+//     const userId = user.id;
+//      console.log("user--id----",user.id);
+//      console.log("userId----",userId);
+
+//     const interests = await Interest.findAll({
+//       where: {
+//         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+//       },
+//        force: true,
+//     });
+//     console.log("Interests to delete:", interests.length);
+
+//     await Interest.destroy({
+//       where: {
+//         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+//       },
+//       force: true, // ensure hard delete if model is paranoid
+//     });
+
+//     await Invite.destroy({
+//       where: {
+//         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+//       },
+//       force: true,
+//     });
+
+//     await user.destroy({ force: true });
+
+//     res.status(200).json({ message: 'User permanently deleted successfully' });
+//   } catch (error) {
+//     console.error('Error hard deleting user:', error.message);
+//     console.error(error.stack);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
+
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -112,26 +160,24 @@ exports.deleteUser = async (req, res) => {
 
     console.log("Deleting user with id:", id);
     const user = await User.findByPk(id);
-    console.log("user--detail----",user);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const userId = user.id;
-     console.log("user--id----",user.id);
-     console.log("userId----",userId);
 
+    // Optional: log interests count before delete
     const interests = await Interest.findAll({
       where: {
         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
-       force: true,
     });
     console.log("Interests to delete:", interests.length);
 
+    // Delete related manually (only if cascade isn't set in model associations)
     await Interest.destroy({
       where: {
         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
-      force: true, // ensure hard delete if model is paranoid
+      force: true,
     });
 
     await Invite.destroy({
@@ -141,6 +187,7 @@ exports.deleteUser = async (req, res) => {
       force: true,
     });
 
+    // Delete user
     await user.destroy({ force: true });
 
     res.status(200).json({ message: 'User permanently deleted successfully' });

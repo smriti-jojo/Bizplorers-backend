@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Invite.associate = (models) => {
-    Invite.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' , onDelete: 'CASCADE'});
-    Invite.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId' , onDelete: 'CASCADE'});
+    Invite.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' , onDelete: 'CASCADE',hooks: true});
+    Invite.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId' , onDelete: 'CASCADE',hooks: true});
   };
 
   return Invite;
