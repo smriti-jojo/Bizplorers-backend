@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Interest.associate = (models) => {
-    Interest.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' });
-    Interest.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId' });
+    Interest.belongsTo(models.User, { as: 'sender', foreignKey: 'senderId' , onDelete: 'CASCADE'});
+    Interest.belongsTo(models.User, { as: 'receiver', foreignKey: 'receiverId', onDelete: 'CASCADE' });
   };
 
   return Interest;
