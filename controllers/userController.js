@@ -39,36 +39,71 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// exports.deleteUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+// console.log("id---",id);
+//     const user = await User.findByPk(id);
+//     if (!user) return res.status(404).json({ message: 'User not found' });
+
+//      // Manually delete all dependent records
+//      const userId = user.id;
+//     await Interest.destroy({
+//       where: {
+//         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+//       },
+//     });
+
+//     await Invite.destroy({
+//       where: {
+//         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
+//       },
+//     });
+
+//     // await user.destroy(); // Soft delete
+//     await user.destroy({ force: true }); // Hard delete
+
+//     res.status(200).json({ message: 'User soft-deleted successfully' });
+//   } catch (error) {
+//     console.error('Error soft deleting user:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) return res.status(400).json({ message: 'User ID is required' });
 
+    console.log("Deleting user with id:", id);
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-     // Manually delete all dependent records
-     const userId = user.id;
-    await Interest.destroy({
+    const userId = user.id;
+
+    const interestDeleted = await Interest.destroy({
       where: {
         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
     });
+    console.log("Deleted interests:", interestDeleted);
 
-    await Invite.destroy({
+    const inviteDeleted = await Invite.destroy({
       where: {
         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
     });
+    console.log("Deleted invites:", inviteDeleted);
 
-    // await user.destroy(); // Soft delete
     await user.destroy({ force: true }); // Hard delete
+    res.status(200).json({ message: 'User permanently deleted successfully' });
 
-    res.status(200).json({ message: 'User soft-deleted successfully' });
   } catch (error) {
-    console.error('Error soft deleting user:', error);
+    console.error('Error hard deleting user:', error.message);
+    console.error(error.stack);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 exports.listDeletedUsers = async (req, res) => {
   try {
