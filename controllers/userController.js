@@ -120,6 +120,7 @@ exports.deleteUser = async (req, res) => {
       where: {
         [Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
+       force: true,
     });
     console.log("Interests to delete:", interests.length);
 
