@@ -627,6 +627,7 @@ exports.getAllPicklistCategoriesWithValues = async (req, res) => {
         {
           model: PicklistValue,
           required: false,
+           where: { is_active: true }, // ✅ Only active values
         },
       ],
       order: [['name', 'ASC']],
@@ -643,7 +644,15 @@ exports.getAllPicklistCategoriesWithValues = async (req, res) => {
       })),
     }));
 
-    res.status(200).json({ data: formatted });
+    // res.status(200).json({ data: formatted });
+     const latestUpdate = await PicklistValue.max('updatedAt', {
+      where: { is_active: true }
+    });
+
+    res.status(200).json({
+      data: formatted,
+      updated_at: latestUpdate,
+    });
   } catch (error) {
     console.error('Error fetching categories with values:', error);
     res.status(500).json({ message: 'Server error while fetching picklist data.' });
