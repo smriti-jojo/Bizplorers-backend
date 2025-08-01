@@ -58,6 +58,8 @@ router.get('/cities', controller.getCitiesByState);
 //done
 router.get('/all-categories-values', controller.getAllPicklistCategoriesWithValues);
 
+router.get('/all-categories-values-admin',controller.getAllPicklistCategoriesWithAllValuesAdmin);
+
 // Get buyer cities by country
 //done
 router.get('/buyer-cities', controller.getBuyerCitiesByCountry);

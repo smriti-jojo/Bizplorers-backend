@@ -659,6 +659,42 @@ exports.getAllPicklistCategoriesWithValues = async (req, res) => {
   }
 };
 
+exports.getAllPicklistCategoriesWithAllValuesAdmin = async (req, res) => {
+  try {
+    const categories = await PicklistCategory.findAll({
+      include: [
+        {
+          model: PicklistValue,
+          required: false,
+        },
+      ],
+      order: [['name', 'ASC']],
+    });
+
+    const formatted = categories.map(category => ({
+      id: category.id,
+      name: category.name,
+      values: category.PicklistValues.map(value => ({
+        id: value.id,
+        value: value.value,
+        is_active: value.is_active,
+        parent_id: value.parent_id,
+      })),
+    }));
+
+    const latestUpdate = await PicklistValue.max('updatedAt');
+
+    res.status(200).json({
+      data: formatted,
+      updated_at: latestUpdate,
+    });
+  } catch (error) {
+    console.error('Error fetching all picklist values (admin):', error);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+
 
 
 
