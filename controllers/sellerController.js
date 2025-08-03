@@ -189,9 +189,10 @@ exports.getSellersByBrokerId = async (req, res) => {
       ],
     });
 
-    if (sellers.length === 0) {
-      return res.status(404).json({ message: 'No sellers found for this broker.' });
-    }
+   if (sellers.length === 0) {
+  return res.status(200).json([]); // Return empty array instead of 404
+}
+
 
     return res.status(200).json(sellers);
   } catch (error) {
