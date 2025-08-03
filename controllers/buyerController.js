@@ -157,7 +157,7 @@ exports.getBuyersByBrokerId = async (req, res) => {
     });
 
     if (buyers.length === 0) {
-      return res.status(404).json({ message: 'No Buyers found for this broker.' });
+      return res.status(200).json([]);
     }
 
     return res.status(200).json(buyers);
